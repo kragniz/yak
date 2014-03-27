@@ -25,6 +25,13 @@ typedef struct {
     SDL_Surface *tile_2;
 } Images;
 
+enum KeyPresses
+{
+    KEY_PRESS_UP,
+    KEY_PRESS_LEFT,
+    KEY_PRESS_RIGHT,
+};
+
 void init_sdl(Game *game) {
     game->window = NULL;
     game->screen = NULL;
@@ -52,25 +59,19 @@ Game *game_new() {
     return game;
 }
 
-void load_images(Images *images, Yak *yak) {
-    yak->image = NULL;
-    images->tile_1 = NULL;
-    images->tile_2 = NULL;
-
-    yak->image = IMG_Load("resources/yak.png");
-    if (yak->image == NULL) {
-        printf("Yak image failed to load. SDL_Error: %s\n", SDL_GetError() );
+SDL_Surface *load_image(char *path) {
+    SDL_Surface *loc = NULL;
+    loc = IMG_Load(path);
+    if (loc == NULL) {
+        printf("Image '%s' failed to load. SDL_Error: %s\n", path, SDL_GetError());
     }
+    return loc;
+}
 
-    images->tile_1 = IMG_Load("resources/tile_1.png");
-    if (images->tile_1 == NULL) {
-        printf("Tile_1 image failed to load. SDL_Error: %s\n", SDL_GetError() );
-    }
-
-    images->tile_2 = IMG_Load("resources/tile_2.png");
-    if (images->tile_2 == NULL) {
-        printf("Tile_2 image failed to load. SDL_Error: %s\n", SDL_GetError() );
-    }
+void images_load(Images *images, Yak *yak) {
+    yak->image = load_image("resources/yak.png");
+    images->tile_1 = load_image("resources/tile_1.png");
+    images->tile_2 = load_image("resources/tile_2.png");
 }
 
 void render_yak(Game *game, Yak *yak) {
@@ -107,7 +108,7 @@ int main(int argc, char* args[]) {
 
     Yak *yak = malloc(sizeof(Yak));
     Images *images = malloc(sizeof(Images));
-    load_images(images, yak);
+    images_load(images, yak);
     yak->x = 43;
     yak->y = 31;
 
