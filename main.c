@@ -1,12 +1,15 @@
 #include <stdio.h>
+#include <stdbool.h>
+
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 
-#define GAME_WIDTH 8
-#define GAME_HEIGHT 5
+#define GAME_WIDTH 12
+#define GAME_HEIGHT 8
 #define TILE_SIZE 64
 
 typedef struct {
+    bool quit;
     SDL_Window *window;
     SDL_Surface *screen;
 } Game;
@@ -41,6 +44,12 @@ void init_sdl(Game *game) {
             game->screen = SDL_GetWindowSurface(game->window);
         }
     }
+}
+
+Game *game_new() {
+    Game *game = malloc(sizeof(Game));
+    init_sdl(game);
+    return game;
 }
 
 void load_images(Images *images, Yak *yak) {
@@ -94,8 +103,7 @@ void render_background(Game *game, Images *images) {
 }
 
 int main(int argc, char* args[]) {
-    Game *game = malloc(sizeof(Game));
-    init_sdl(game);
+    Game *game = game_new();
 
     Yak *yak = malloc(sizeof(Yak));
     Images *images = malloc(sizeof(Images));
@@ -105,13 +113,20 @@ int main(int argc, char* args[]) {
 
     printf("Yaks started\n");
 
-    SDL_FillRect(game->screen, NULL, SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
-    render_background(game, images);
-    render_yak(game, yak);
+    SDL_Event e;
+    while (!game->quit) {
+        while(SDL_PollEvent(&e) != 0) {
+            if(e.type == SDL_QUIT) {
+                game->quit = true;
+            }
+            SDL_FillRect(game->screen, NULL,
+                    SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
+            render_background(game, images);
+            render_yak(game, yak);
 
-    SDL_UpdateWindowSurface(game->window);
-
-    SDL_Delay(1000);
+            SDL_UpdateWindowSurface(game->window);
+        }
+    }
 
     return 0;
 }
