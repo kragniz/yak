@@ -10,6 +10,10 @@ typedef struct {
     SDL_Surface *screen;
 } Game;
 
+typedef struct {
+    SDL_Surface *yak;
+} Images;
+
 void init_sdl(Game *game) {
     game->window = NULL;
     game->screen = NULL;
@@ -30,25 +34,31 @@ void init_sdl(Game *game) {
     }
 }
 
+void load_images(Images *images) {
+    images->yak = NULL;
+
+    images->yak = IMG_Load("resources/yak.png");
+    if (images->yak == NULL) {
+        printf("Yak image failed to load. SDL_Error: %s\n", SDL_GetError() );
+    }
+}
+
 int main(int argc, char* args[]) {
     Game *game = malloc(sizeof(Game));
-    init_sdl(game);
+    Images *images = malloc(sizeof(Images));
 
-    SDL_Surface *yak_image = NULL;
+    init_sdl(game);
+    load_images(images);
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf( "SDL_Error: %s\n", SDL_GetError());
     } else {
         printf("Yaks started\n");
 
-        SDL_Surface *yak_image = IMG_Load("resources/yak.png");
-        if (yak_image == NULL) {
-            printf("Yak image failed to load. SDL_Error: %s\n", SDL_GetError() );
-        }
 
         SDL_FillRect(game->screen, NULL,
                 SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
-        SDL_BlitSurface(yak_image, NULL, game->screen, NULL );
+        SDL_BlitSurface(images->yak, NULL, game->screen, NULL );
         SDL_UpdateWindowSurface(game->window);
 
         SDL_Delay(1000);
