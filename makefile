@@ -1,7 +1,8 @@
 CC= gcc
-LIBS= -lSDL2
+LIBS= -lSDL2 -lSDL2_image
+CFLAGS= -Wall
 
 all: yak
 
 yak: main.c
-	$(CC) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $< -o $@ $(LIBS)
