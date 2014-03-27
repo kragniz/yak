@@ -1,36 +1,19 @@
 #include <stdio.h>
-#include <stdbool.h>
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+#include "yak.h"
+#include "game.h"
 
 #define GAME_WIDTH 12
 #define GAME_HEIGHT 8
 #define TILE_SIZE 64
 
 typedef struct {
-    bool quit;
-    SDL_Window *window;
-    SDL_Surface *screen;
-} Game;
-
-typedef struct {
-    int x;
-    int y;
-    SDL_Surface *image;
-} Yak;
-
-typedef struct {
     SDL_Surface *tile_1;
     SDL_Surface *tile_2;
 } Images;
-
-enum KeyPresses
-{
-    KEY_PRESS_UP,
-    KEY_PRESS_LEFT,
-    KEY_PRESS_RIGHT,
-};
 
 void init_sdl(Game *game) {
     game->window = NULL;
@@ -74,15 +57,6 @@ void images_load(Images *images, Yak *yak) {
     images->tile_2 = load_image("resources/tile_2.png");
 }
 
-void render_yak(Game *game, Yak *yak) {
-    SDL_Rect offset;
-    offset.x = yak->x;
-    offset.y = yak->y;
-    offset.w = 0;
-    offset.h = 0;
-
-    SDL_BlitSurface(yak->image, NULL, game->screen, &offset);
-}
 
 void render_background(Game *game, Images *images) {
     SDL_Rect offset;
@@ -106,11 +80,9 @@ void render_background(Game *game, Images *images) {
 int main(int argc, char* args[]) {
     Game *game = game_new();
 
-    Yak *yak = malloc(sizeof(Yak));
+    Yak *yak = yak_new();
     Images *images = malloc(sizeof(Images));
     images_load(images, yak);
-    yak->x = 43;
-    yak->y = 31;
 
     printf("Yaks started\n");
 
@@ -119,11 +91,16 @@ int main(int argc, char* args[]) {
         while(SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT) {
                 game->quit = true;
+            } else if(e.type == SDL_KEYDOWN) {
+                switch(e.key.keysym.sym) {
+                    case SDLK_UP:
+                        printf("key up\n");
+                        break;
+                }
             }
             SDL_FillRect(game->screen, NULL,
                     SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
             render_background(game, images);
-            render_yak(game, yak);
 
             SDL_UpdateWindowSurface(game->window);
         }
