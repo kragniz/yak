@@ -11,8 +11,10 @@ typedef struct {
 } Game;
 
 typedef struct {
-    SDL_Surface *yak;
-} Images;
+    int x;
+    int y;
+    SDL_Surface *image;
+} Yak;
 
 void init_sdl(Game *game) {
     game->window = NULL;
@@ -21,7 +23,8 @@ void init_sdl(Game *game) {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf( "SDL_Error: %s\n", SDL_GetError());
     } else {
-        game->window = SDL_CreateWindow("Yak", SDL_WINDOWPOS_UNDEFINED,
+        game->window = SDL_CreateWindow("Yak", 
+                SDL_WINDOWPOS_UNDEFINED,
                 SDL_WINDOWPOS_UNDEFINED,
                 SCREEN_WIDTH,
                 SCREEN_HEIGHT,
@@ -34,35 +37,42 @@ void init_sdl(Game *game) {
     }
 }
 
-void load_images(Images *images) {
-    images->yak = NULL;
+void load_images(Yak *yak) {
+    yak->image = NULL;
 
-    images->yak = IMG_Load("resources/yak.png");
-    if (images->yak == NULL) {
+    yak->image = IMG_Load("resources/yak.png");
+    if (yak->image== NULL) {
         printf("Yak image failed to load. SDL_Error: %s\n", SDL_GetError() );
     }
 }
 
+void render_yak(Game *game, Yak *yak) {
+    SDL_Rect offset;
+    offset.x = yak->x;
+    offset.y = yak->y;
+    offset.w = 0;
+    offset.h = 0;
+
+    SDL_BlitSurface(yak->image, NULL, game->screen, &offset);
+}
+
 int main(int argc, char* args[]) {
     Game *game = malloc(sizeof(Game));
-    Images *images = malloc(sizeof(Images));
-
     init_sdl(game);
-    load_images(images);
 
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf( "SDL_Error: %s\n", SDL_GetError());
-    } else {
-        printf("Yaks started\n");
+    Yak *yak = malloc(sizeof(Yak));
+    load_images(yak);
+    yak->x = 43;
+    yak->y = 31;
 
+    printf("Yaks started\n");
 
-        SDL_FillRect(game->screen, NULL,
-                SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
-        SDL_BlitSurface(images->yak, NULL, game->screen, NULL );
-        SDL_UpdateWindowSurface(game->window);
+    SDL_FillRect(game->screen, NULL, SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
+    render_yak(game, yak);
 
-        SDL_Delay(1000);
-    }
+    SDL_UpdateWindowSurface(game->window);
+
+    SDL_Delay(1000);
 
     return 0;
 }
