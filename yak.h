@@ -12,4 +12,6 @@ typedef struct {
 
 Yak *yak_new();
 
+void yak_render(Game *game, Yak *yak);
+
 #endif

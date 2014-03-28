@@ -101,6 +101,7 @@ int main(int argc, char* args[]) {
             SDL_FillRect(game->screen, NULL,
                     SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
             render_background(game, images);
+            yak_render(game, yak);
 
             SDL_UpdateWindowSurface(game->window);
         }
