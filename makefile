@@ -7,7 +7,7 @@ _DEPS= yak.h game.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 ODIR=obj
-_OBJ = main.o yak.o
+_OBJ = main.o yak.o game.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: yak

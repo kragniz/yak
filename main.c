@@ -6,37 +6,10 @@
 #include "yak.h"
 #include "game.h"
 
-#define GAME_WIDTH 12
-#define GAME_HEIGHT 8
-#define TILE_SIZE 64
-
 typedef struct {
     SDL_Surface *tile_1;
     SDL_Surface *tile_2;
 } Images;
-
-Game *game_new() {
-    Game *game = malloc(sizeof(Game));
-    game->window = NULL;
-    game->screen = NULL;
-
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf( "SDL_Error: %s\n", SDL_GetError());
-    } else {
-        game->window = SDL_CreateWindow("Yak", 
-                SDL_WINDOWPOS_UNDEFINED,
-                SDL_WINDOWPOS_UNDEFINED,
-                GAME_WIDTH * TILE_SIZE,
-                GAME_HEIGHT * TILE_SIZE,
-                SDL_WINDOW_SHOWN);
-        if(game->window == NULL) {
-            printf("SDL_Error: %s\n", SDL_GetError() );
-        } else {
-            game->screen = SDL_GetWindowSurface(game->window);
-        }
-    }
-    return game;
-}
 
 SDL_Surface *load_image(char *path) {
     SDL_Surface *loc = NULL;
@@ -84,7 +57,7 @@ int main(int argc, char* args[]) {
 
     SDL_Event e;
     while (!game->quit) {
-        while(SDL_PollEvent(&e) != 0) {
+        if(SDL_PollEvent(&e) != 0) {
             if(e.type == SDL_QUIT) {
                 game->quit = true;
             } else if(e.type == SDL_KEYDOWN) {
@@ -94,13 +67,18 @@ int main(int argc, char* args[]) {
                         break;
                 }
             }
-            SDL_FillRect(game->screen, NULL,
-                    SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
-            render_background(game, images);
-            yak_render(yak, game->screen);
 
-            SDL_UpdateWindowSurface(game->window);
         }
+
+        yak_update(yak, game->t_delta);
+        game_tick(game);
+
+        SDL_FillRect(game->screen, NULL,
+                SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
+        render_background(game, images);
+        yak_render(yak, game->screen);
+
+        SDL_UpdateWindowSurface(game->window);
     }
 
     return 0;
