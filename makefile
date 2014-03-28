@@ -13,7 +13,7 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 all: yak
 
 $(ODIR)/%.o: %.c $(DEPS)
-	mkdir -p obj
+	@mkdir -p obj
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 yak: $(OBJ)
