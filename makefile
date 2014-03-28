@@ -7,7 +7,7 @@ OBJ = main.o yak.o
 all: yak
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 yak: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS) $(LIBS)
