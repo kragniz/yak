@@ -1,8 +1,6 @@
 #ifndef THE_YAKS_ARE_HERE
 #define THE_YAKS_ARE_HERE
 
-#include "game.h"
-
 typedef struct {
     int x;
     int y;
@@ -12,6 +10,6 @@ typedef struct {
 
 Yak *yak_new();
 
-void yak_render(Game *game, Yak *yak);
+void yak_render(Yak *yak, SDL_Surface *surface);
 
 #endif

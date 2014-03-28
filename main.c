@@ -15,7 +15,8 @@ typedef struct {
     SDL_Surface *tile_2;
 } Images;
 
-void init_sdl(Game *game) {
+Game *game_new() {
+    Game *game = malloc(sizeof(Game));
     game->window = NULL;
     game->screen = NULL;
 
@@ -34,11 +35,6 @@ void init_sdl(Game *game) {
             game->screen = SDL_GetWindowSurface(game->window);
         }
     }
-}
-
-Game *game_new() {
-    Game *game = malloc(sizeof(Game));
-    init_sdl(game);
     return game;
 }
 
@@ -101,7 +97,7 @@ int main(int argc, char* args[]) {
             SDL_FillRect(game->screen, NULL,
                     SDL_MapRGB(game->screen->format, 0xAA, 0xAA, 0xAA));
             render_background(game, images);
-            yak_render(game, yak);
+            yak_render(yak, game->screen);
 
             SDL_UpdateWindowSurface(game->window);
         }
