@@ -10,7 +10,7 @@ Game *game_new() {
     game->t_delta = 0;
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf( "SDL_Error: %s\n", SDL_GetError());
+        printf("SDL_Error: %s\n", SDL_GetError());
     } else {
         game->window = SDL_CreateWindow("Yak", 
                 SDL_WINDOWPOS_UNDEFINED,

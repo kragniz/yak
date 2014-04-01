@@ -5,15 +5,15 @@
 Yak *yak_new() {
     Yak *yak = malloc(sizeof(Yak));
     yak->x = 0;
-    yak->y = 24;
+    yak->y = 50;
     yak->x_tile = 0;
     yak->y_tile = 0;
-    yak->vel = -40;
+    yak->vel = -60;
     return yak;
 }
 
 void yak_update(Yak *yak, float t_delta) {
-    yak->vel = yak->vel + (50 * t_delta);
+    yak->vel = yak->vel + (500 * t_delta);
     yak->y = yak->y + (yak->vel * t_delta);
 }
 

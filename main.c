@@ -63,7 +63,9 @@ int main(int argc, char* args[]) {
             } else if(e.type == SDL_KEYDOWN) {
                 switch(e.key.keysym.sym) {
                     case SDLK_UP:
-                        printf("key up\n");
+                        yak->vel = -200;
+                        break;
+                    case SDLK_LEFT:
                         break;
                 }
             }
