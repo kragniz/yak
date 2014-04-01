@@ -26,7 +26,6 @@ void images_load(Images *images, Yak *yak) {
     images->tile_2 = load_image("resources/tile_2.png");
 }
 
-
 void render_background(Game *game, Images *images) {
     SDL_Rect offset;
     offset.x = offset.y = offset.w = offset.h = 0;
@@ -66,6 +65,9 @@ int main(int argc, char* args[]) {
                         yak->vel = -200;
                         break;
                     case SDLK_LEFT:
+                        break;
+                    case SDLK_ESCAPE:
+                        exit(0);
                         break;
                 }
             }
